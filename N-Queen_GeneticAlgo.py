@@ -1,8 +1,11 @@
+#!/usr/bin/python
 import random
 
-def random_chromosome(size): #making random chromosomes 
+#Gerando os cromossomos randomicamente
+def random_chromosome(size):  
     return [ random.randint(1, nq) for _ in range(nq) ]
 
+#Funcao que calcula o valor do fitness
 def fitness(chromosome):
     horizontal_collisions = sum([chromosome.count(queen)-1 for queen in chromosome])/2
     diagonal_collisions = 0
@@ -38,27 +41,35 @@ def random_pick(population, probabilities):
             return c
         upto += w
     assert False, "Shouldn't get here"
-        
-def reproduce(x, y): #doing cross_over between two chromosomes
+
+#Realiza o cross_over apos receber dois cromossomos
+def reproduce(x, y):
     n = len(x)
     c = random.randint(0, n - 1)
     return x[0:c] + y[c:n]
 
-def mutate(x):  #randomly changing the value of a random index of a chromosome
+#Realiza a mutacao de um filho randomicamente
+def mutate(x):  
     n = len(x)
     c = random.randint(0, n - 1)
     m = random.randint(1, n)
     x[c] = m
     return x
 
+#Realizando a operacao Genetica
 def genetic_queen(population, fitness):
+    #Definindo valor para permitir mutacao
     mutation_probability = 0.03
     new_population = []
     probabilities = [probability(n, fitness) for n in population]
     for i in range(len(population)):
-        x = random_pick(population, probabilities) #best chromosome 1
-        y = random_pick(population, probabilities) #best chromosome 2
-        child = reproduce(x, y) #creating two new chromosomes from the best 2 chromosomes
+        x = random_pick(population, probabilities) #melhor cromossomo 1
+        y = random_pick(population, probabilities) #melhor cromossomo 2
+        child = reproduce(x, y) #criando novo cromossomos a partir dos dois melhores
+        #A mutacao genetica sera realizada no cromossomo de acordo com a probabilidade de mutacao predefinida. 
+        #Essa condicao e imposta, verificando a probabilidade de mutacao em relacao a um numero aleatorio. 
+        #Se o numero aleatorio for menor que o "mutation_probability", o gene sera mutado, 
+        #trocando-se duas posicoes aleatorias no cromossomo.
         if random.random() < mutation_probability:
             child = mutate(child)
         print_chromosome(child)
@@ -71,7 +82,7 @@ def print_chromosome(chrom):
         .format(str(chrom), fitness(chrom)))
 
 if __name__ == "__main__":
-    nq = int(input("Enter Number of Queens: ")) #say N = 8
+    nq = int(input("Digite o numero de rainhas: ")) #say N = 8
     maxFitness = (nq*(nq-1))/2  # 8*7/2 = 28
     population = [random_chromosome(nq) for _ in range(100)]
     
@@ -107,8 +118,5 @@ if __name__ == "__main__":
             
     print()
     print_board(board)
-            
-           
-            
-    
-
+  
+        
